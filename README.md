@@ -1,4 +1,4 @@
-# TargetApp01
+# SampleApp01
 
 Polaris の SAST/SCA/DAST の解析対象のサンプルです。
 Python と Flask で作成されたWebアプリケーションです。
