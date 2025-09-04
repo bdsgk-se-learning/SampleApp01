@@ -1,9 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session, g
+from flask_restful import Api, Resource
+from flasgger import Swagger
 import os
 import subprocess
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+api = Api(app)
+swagger = Swagger(app)
+
 app.secret_key = 'your_secret_key'  # セッション用の秘密鍵
 
 DATABASE = os.path.join(os.path.dirname(__file__), 'app.db')
@@ -97,3 +102,32 @@ def index():
     if not g.user:
         return redirect(url_for('login'))
     return render_template('welcome.html', username=g.user[1])
+
+class UserListAPI(Resource):
+    def get(self):
+        """
+        ユーザー一覧を取得するAPI
+        ---
+        responses:
+          200:
+            description: ユーザー一覧を返します
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ユーザーID
+                  username:
+                    type: string
+                    description: ユーザー名
+        """
+        users = run_sql(
+            'SELECT id, username FROM users',
+            fetchall=True
+        )
+        return [{'id': user[0], 'username': user[1]} for user in users]
+
+# APIルートの登録
+api.add_resource(UserListAPI, '/api/users')

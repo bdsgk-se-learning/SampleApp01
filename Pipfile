@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 flask = "*"
+flask-restful = "*"
+flasgger = "*"
 
 [dev-packages]
 
