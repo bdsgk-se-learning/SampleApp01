@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}ユーザー管理{% endblock %}
+
+{% block content %}
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title mb-4">ユーザー管理</h2>
+                
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ユーザー名</th>
+                                <th>2FA状態</th>
+                                <th>管理者</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                <td>
+                                    {% if user.is_2fa_enabled %}
+                                        <span class="badge bg-success">有効</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">無効</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user.is_admin %}
+                                        <span class="badge bg-primary">管理者</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not user.is_protected %}
+                                    <div class="btn-group" role="group">
+                                        <form method="post" action="{{ url_for('admin_reset_password', user_id=user.id) }}" class="d-inline">
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="btn btn-warning btn-sm" 
+                                                    onclick="return confirm('パスワードをリセットしますか？')">
+                                                パスワードリセット
+                                            </button>
+                                        </form>
+                                        {% if user.is_2fa_enabled %}
+                                        <form method="post" action="{{ url_for('admin_reset_2fa', user_id=user.id) }}" class="d-inline ms-2">
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('2FAをリセットしますか？')">
+                                                2FAリセット
+                                            </button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+{% endblock %}

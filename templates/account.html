@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}アカウント設定{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">パスワード変更</h2>
+                        <form method="post" action="{{ url_for('change_password') }}">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label">現在のパスワード</label>
+                                <input type="password" class="form-control" id="current_password" name="current_password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="new_password" class="form-label">新しいパスワード</label>
+                                <input type="password" class="form-control" id="new_password" name="new_password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">パスワードを変更</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">二段階認証</h2>
+                        {% if not user.is_2fa_enabled %}
+                        <p>二段階認証を有効にすると、ログイン時により高いセキュリティを確保できます。</p>
+                        <a href="{{ url_for('setup_2fa') }}" class="btn btn-success">二段階認証を有効にする</a>
+                        {% else %}
+                        <p>二段階認証は現在有効です。</p>
+                        <form method="post" action="{{ url_for('disable_2fa') }}">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-danger">二段階認証を無効にする</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -10,6 +10,7 @@
             <div class="card-body">
                 <h2 class="card-title text-center mb-4">ユーザー登録</h2>
                 <form method="post">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <label for="username" class="form-label">ユーザー名</label>
                         <input type="text" class="form-control" id="username" name="username" required>
@@ -17,6 +18,12 @@
                     <div class="mb-3">
                         <label for="password" class="form-label">パスワード</label>
                         <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="enable_2fa" name="enable_2fa">
+                            <label class="form-check-label" for="enable_2fa">二段階認証を有効にする</label>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">登録</button>
                 </form>

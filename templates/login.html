@@ -9,7 +9,15 @@
         <div class="card shadow-sm mx-auto" style="max-width: 400px;">
             <div class="card-body">
                 <h2 class="card-title text-center mb-4">ログイン</h2>
-                <form method="post">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger mb-3">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <form method="post" action="{{ url_for('login') }}">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <label for="username" class="form-label">ユーザー名</label>
                         <input type="text" class="form-control" id="username" name="username" required>
