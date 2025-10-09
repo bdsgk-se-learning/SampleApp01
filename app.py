@@ -103,6 +103,14 @@ def index():
         return redirect(url_for('login'))
     return render_template('welcome.html', username=g.user[1])
 
+@app.route('/users')
+def users():
+    if not g.user:
+        return redirect(url_for('login'))
+    users = run_sql('SELECT id, username FROM users', fetchall=True)
+    user_list = [{'id': u[0], 'username': u[1]} for u in users]
+    return render_template('users.html', users=user_list)
+
 class UserListAPI(Resource):
     def get(self):
         """
